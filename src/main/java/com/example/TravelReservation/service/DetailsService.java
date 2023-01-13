@@ -1,11 +1,13 @@
 package com.example.TravelReservation.service;
 
-import com.example.TravelReservation.ServiceAlreadyPresentException;
+import com.example.TravelReservation.exceptions.LocationIsInvalidException;
+import com.example.TravelReservation.exceptions.ServiceAlreadyPresentException;
 import com.example.TravelReservation.entity.BusDetails;
 import com.example.TravelReservation.entity.Routes;
 import com.example.TravelReservation.entity.RoutesPk;
 import com.example.TravelReservation.payload.*;
 import com.example.TravelReservation.repository.BusDetailsRepository;
+import com.example.TravelReservation.repository.LocationRepository;
 import com.example.TravelReservation.repository.RoutesRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +29,9 @@ public class DetailsService {
     private BusDetailsRepository busDetailsRepository;
     @Autowired
     private RoutesRepository routesRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -66,12 +71,15 @@ public class DetailsService {
     }
 
     @Transactional
-    public CustomResponse addNewService(CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException {
+    public CustomResponse addNewService(CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException, LocationIsInvalidException {
         LOGGER.info("Entered addNewService, request - {}", request);
 
         if(checkIfServiceAlreadyExists(request.getServiceId())){
             throw new ServiceAlreadyPresentException();
         }
+       if(!areRoutesValid(request.getRoutes())){
+           throw new LocationIsInvalidException();
+       }
         BusDetails busDetailsToBeAdded = modelMapper.map(request, BusDetails.class);
         sortRoutesList(request);
         updateStartAndEndLocations(busDetailsToBeAdded, request.getRoutes());
@@ -132,5 +140,23 @@ public class DetailsService {
         Boolean result = checkBusServiceAlreadyExistsById.apply(serviceId);
         LOGGER.info("Leaving checkIfServiceAlreadyExists, result - {}", result);
         return result;
+    }
+
+    public Boolean areRoutesValid(List<RouteDetails> routes){
+        LOGGER.info("Entered areRoutesValid, routes - {}", routes);
+        Predicate<RouteDetails> filterRoutesIfLocationExists = (route)->{
+            return !locationRepository.existsByName(route.getLocation());
+        };
+        Optional<RouteDetails> route = routes.stream().filter(filterRoutesIfLocationExists).findAny();
+        Boolean result = route.isEmpty();
+        LOGGER.info("Leaving areRoutesValid, result - {}", result);
+        return result;
+    }
+
+    public List<String> getLocation(String location) {
+        LOGGER.info("Entered areRoutesValid, location - {}", location);
+        List<String> response = locationRepository.findByNameLike(location.toUpperCase());
+        LOGGER.info("Entered areRoutesValid, response - {}", response);
+        return response;
     }
 }

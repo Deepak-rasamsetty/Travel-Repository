@@ -1,6 +1,7 @@
 package com.example.TravelReservation.controller;
 
-import com.example.TravelReservation.ServiceAlreadyPresentException;
+import com.example.TravelReservation.exceptions.LocationIsInvalidException;
+import com.example.TravelReservation.exceptions.ServiceAlreadyPresentException;
 import com.example.TravelReservation.payload.BusDetailsResponse;
 import com.example.TravelReservation.payload.BusSearchRequest;
 import com.example.TravelReservation.payload.CreateNewBusServiceRequest;
@@ -29,12 +30,19 @@ public class DetailsController {
    }
 
    @PostMapping("/add")
-    public CustomResponse addNewService(@Valid @RequestBody CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException {
+    public CustomResponse addNewService(@Valid @RequestBody CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException, LocationIsInvalidException {
        LOGGER.info("Entered addNewService, request - {}", request);
        CustomResponse response = detailsService.addNewService(request);
        LOGGER.info("Leaving  addNewService, response - {}", response);
        return response;
+    }
 
-   }
+    @GetMapping("/{location}")
+    public List<String> getLocation(@PathVariable("location") String location){
+        LOGGER.info("Entered getLocation, location - {}", location);
+        List<String> response = detailsService.getLocation(location);
+        LOGGER.info("Leaving  addNewService, response - {}", response);
+        return response;
+    }
 
 }

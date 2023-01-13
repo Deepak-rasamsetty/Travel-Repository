@@ -1,9 +1,11 @@
 package com.example.TravelReservation;
 
 import com.example.TravelReservation.entity.BusDetails;
+import com.example.TravelReservation.entity.Location;
 import com.example.TravelReservation.entity.Routes;
 import com.example.TravelReservation.entity.RoutesPk;
 import com.example.TravelReservation.repository.BusDetailsRepository;
+import com.example.TravelReservation.repository.LocationRepository;
 import com.example.TravelReservation.repository.RoutesRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class TravelReservationApplication {
 	RoutesRepository routesRepository;
 	@Autowired
 	BusDetailsRepository busDetailsRepository;
+
+	@Autowired
+	LocationRepository locationRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(TravelReservationApplication.class, args);
 	}
@@ -31,6 +36,42 @@ public class TravelReservationApplication {
 	@Bean
 	public ModelMapper getModelmapper(){
 		return new ModelMapper();
+	}
+
+	@Bean
+	public void addLocation(){
+		Location l1= new Location();
+		Location l2= new Location();
+		Location l3= new Location();
+		Location l4= new Location();
+		Location l5= new Location();
+		Location l6= new Location();
+		Location l7= new Location();
+		Location l8= new Location();
+		Location l9= new Location();
+
+		l1.setName("HYDERABAD");
+		l2.setName("CHENNAI");
+		l3.setName("MUMBAI");
+		l4.setName("PUNE");
+		l5.setName("BANGLORE");
+		l6.setName("KOCHI");
+
+		l7.setName("KOLKATA");
+		l8.setName("NAGPUR");
+		l9.setName("RANCHI");
+
+		locationRepository.save(l1);
+		locationRepository.save(l2);
+		locationRepository.save(l3);
+		locationRepository.save(l4);
+		locationRepository.save(l5);
+		locationRepository.save(l6);
+		locationRepository.save(l7);
+		locationRepository.save(l8);
+		locationRepository.save(l9);
+
+
 	}
 //	@Bean
 //	public void addData(){
