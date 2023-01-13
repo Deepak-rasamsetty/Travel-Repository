@@ -1,7 +1,10 @@
 package com.example.TravelReservation.controller;
 
+import com.example.TravelReservation.ServiceAlreadyPresentException;
 import com.example.TravelReservation.payload.BusDetailsResponse;
 import com.example.TravelReservation.payload.BusSearchRequest;
+import com.example.TravelReservation.payload.CreateNewBusServiceRequest;
+import com.example.TravelReservation.payload.CustomResponse;
 import com.example.TravelReservation.service.DetailsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +26,15 @@ public class DetailsController {
        List<BusDetailsResponse> resposneList= detailsService.getAvailableBusses(request);
        LOGGER.info("Leaving getAvailableBuses, response - {}", resposneList);
        return resposneList;
+   }
+
+   @PostMapping("/add")
+    public CustomResponse addNewService(@Valid @RequestBody CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException {
+       LOGGER.info("Entered addNewService, request - {}", request);
+       CustomResponse response = detailsService.addNewService(request);
+       LOGGER.info("Leaving  addNewService, response - {}", response);
+       return response;
+
    }
 
 }

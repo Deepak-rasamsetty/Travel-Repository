@@ -19,9 +19,9 @@ public class Routes {
 
     @EmbeddedId
     RoutesPk routesPk;
-    private Integer destinationSequenceId;
+    private Integer sequenceId;
 
-    private LocalDate date;
+    private String date;
     private String time;
 
 

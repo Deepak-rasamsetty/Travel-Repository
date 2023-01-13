@@ -15,7 +15,7 @@ public interface RoutesRepository extends JpaRepository<Routes, RoutesPk> {
 
     @Query(value = "Select Distinct r1.service_id from routes r1, routes r2 " +
             "where r1.service_id=r2.service_id and r1.location = ?1 and r2.location = ?2 " +
-            "and r1.destination_sequence_id< r2.destination_sequence_id", nativeQuery = true)
+            "and r1.sequence_id< r2.sequence_id", nativeQuery = true)
     public List<Integer> fetchAvailableBusesByLocation(String aLocation, String zLocation);
 
 

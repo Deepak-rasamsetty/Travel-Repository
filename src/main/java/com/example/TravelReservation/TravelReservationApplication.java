@@ -32,106 +32,106 @@ public class TravelReservationApplication {
 	public ModelMapper getModelmapper(){
 		return new ModelMapper();
 	}
-	@Bean
-	public void addData(){
-		Routes r1=new Routes();
-		RoutesPk rpk1=new RoutesPk();
-		rpk1.setServiceId(1234);
-		rpk1.setLocation("Hyderabad");
-		r1.setRoutesPk(rpk1);
-		r1.setDestinationSequenceId(1);
-		r1.setDate(LocalDate.of(2022,02,01));
-		r1.setTime("22:00");
-
-		Routes r2=new Routes();
-		RoutesPk rpk2=new RoutesPk();
-		rpk2.setServiceId(1234);
-		rpk2.setLocation("Banglore");
-		r2.setRoutesPk(rpk2);
-		r2.setDestinationSequenceId(2);
-		r2.setDate(LocalDate.of(2022,02,01));
-		r2.setTime("23:00");
-
-		Routes r3=new Routes();
-		RoutesPk rpk3=new RoutesPk();
-		rpk3.setServiceId(1234);
-		rpk3.setLocation("Chennai");
-		r3.setRoutesPk(rpk3);
-		r3.setDestinationSequenceId(3);
-		r3.setDate(LocalDate.of(2022,02,02));
-		r3.setTime("00:00");
-
-		Routes r4=new Routes();
-		RoutesPk rpk4=new RoutesPk();
-		rpk4.setServiceId(1234);
-		rpk4.setLocation("Kanyakumari");
-		r4.setRoutesPk(rpk4);
-		r4.setDestinationSequenceId(4);
-		r4.setDate(LocalDate.of(2022,02,02));
-		r4.setTime("01:00");
-
-		Routes r5=new Routes();
-		RoutesPk rpk5=new RoutesPk();
-		rpk5.setServiceId(4567);
-		rpk5.setLocation("Banglore");
-		r5.setRoutesPk(rpk5);
-		r5.setDestinationSequenceId(1);
-		r5.setDate(LocalDate.of(2022,02,02));
-		r5.setTime("03:00");
-
-		Routes r6=new Routes();
-		RoutesPk rpk6=new RoutesPk();
-		rpk6.setServiceId(4567);
-		rpk6.setLocation("Chennai");
-		r6.setRoutesPk(rpk6);
-		r6.setDestinationSequenceId(2);
-		r6.setDate(LocalDate.of(2022,02,02));
-		r6.setTime("04:00");
-
-		Routes r7=new Routes();
-		RoutesPk rpk7=new RoutesPk();
-		rpk7.setServiceId(4567);
-		rpk7.setLocation("Kanyakumari");
-		r7.setRoutesPk(rpk7);
-		r7.setDestinationSequenceId(3);
-		r7.setDate(LocalDate.of(2022,02,02));
-		r7.setTime("05:00");
-
-		Routes r8=new Routes();
-		RoutesPk rpk8=new RoutesPk();
-		rpk8.setServiceId(4567);
-		rpk8.setLocation("Delhi");
-		r8.setRoutesPk(rpk8);
-		r8.setDestinationSequenceId(4);
-		r8.setDate(LocalDate.of(2022,02,02));
-		r8.setTime("06:00");
-
-		routesRepository.save(r1);
-		routesRepository.save(r2);
-		routesRepository.save(r3);
-		routesRepository.save(r4);
-
-		routesRepository.save(r5);
-		routesRepository.save(r6);
-		routesRepository.save(r7);
-		routesRepository.save(r8);
-
-		BusDetails b1=new BusDetails();
-		b1.setTravels("MorningStar");
-		b1.setServiceId(1234);
-		b1.setRating("3.5");
-		b1.setStartLocation("Hyderabad");
-		b1.setEndLocation("kanyakumari");
-
-		BusDetails b2=new BusDetails();
-		b2.setTravels("Kaveri");
-		b2.setServiceId(4567);
-		b2.setRating("3.5");
-		b2.setStartLocation("Banglore");
-		b2.setEndLocation("Delhi");
-
-		busDetailsRepository.save(b1);
-		busDetailsRepository.save(b2);
-
-	}
+//	@Bean
+//	public void addData(){
+//		Routes r1=new Routes();
+//		RoutesPk rpk1=new RoutesPk();
+//		rpk1.setServiceId(1234);
+//		rpk1.setLocation("Hyderabad");
+//		r1.setRoutesPk(rpk1);
+//		r1.setDestinationSequenceId(1);
+//		r1.setDate(LocalDate.of(2022,02,01));
+//		r1.setTime("22:00");
+//
+//		Routes r2=new Routes();
+//		RoutesPk rpk2=new RoutesPk();
+//		rpk2.setServiceId(1234);
+//		rpk2.setLocation("Banglore");
+//		r2.setRoutesPk(rpk2);
+//		r2.setDestinationSequenceId(2);
+//		r2.setDate(LocalDate.of(2022,02,01));
+//		r2.setTime("23:00");
+//
+//		Routes r3=new Routes();
+//		RoutesPk rpk3=new RoutesPk();
+//		rpk3.setServiceId(1234);
+//		rpk3.setLocation("Chennai");
+//		r3.setRoutesPk(rpk3);
+//		r3.setDestinationSequenceId(3);
+//		r3.setDate(LocalDate.of(2022,02,02));
+//		r3.setTime("00:00");
+//
+//		Routes r4=new Routes();
+//		RoutesPk rpk4=new RoutesPk();
+//		rpk4.setServiceId(1234);
+//		rpk4.setLocation("Kanyakumari");
+//		r4.setRoutesPk(rpk4);
+//		r4.setDestinationSequenceId(4);
+//		r4.setDate(LocalDate.of(2022,02,02));
+//		r4.setTime("01:00");
+//
+//		Routes r5=new Routes();
+//		RoutesPk rpk5=new RoutesPk();
+//		rpk5.setServiceId(4567);
+//		rpk5.setLocation("Banglore");
+//		r5.setRoutesPk(rpk5);
+//		r5.setDestinationSequenceId(1);
+//		r5.setDate(LocalDate.of(2022,02,02));
+//		r5.setTime("03:00");
+//
+//		Routes r6=new Routes();
+//		RoutesPk rpk6=new RoutesPk();
+//		rpk6.setServiceId(4567);
+//		rpk6.setLocation("Chennai");
+//		r6.setRoutesPk(rpk6);
+//		r6.setDestinationSequenceId(2);
+//		r6.setDate(LocalDate.of(2022,02,02));
+//		r6.setTime("04:00");
+//
+//		Routes r7=new Routes();
+//		RoutesPk rpk7=new RoutesPk();
+//		rpk7.setServiceId(4567);
+//		rpk7.setLocation("Kanyakumari");
+//		r7.setRoutesPk(rpk7);
+//		r7.setDestinationSequenceId(3);
+//		r7.setDate(LocalDate.of(2022,02,02));
+//		r7.setTime("05:00");
+//
+//		Routes r8=new Routes();
+//		RoutesPk rpk8=new RoutesPk();
+//		rpk8.setServiceId(4567);
+//		rpk8.setLocation("Delhi");
+//		r8.setRoutesPk(rpk8);
+//		r8.setDestinationSequenceId(4);
+//		r8.setDate(LocalDate.of(2022,02,02));
+//		r8.setTime("06:00");
+//
+//		routesRepository.save(r1);
+//		routesRepository.save(r2);
+//		routesRepository.save(r3);
+//		routesRepository.save(r4);
+//
+//		routesRepository.save(r5);
+//		routesRepository.save(r6);
+//		routesRepository.save(r7);
+//		routesRepository.save(r8);
+//
+//		BusDetails b1=new BusDetails();
+//		b1.setTravels("MorningStar");
+//		b1.setServiceId(1234);
+//		b1.setRating("3.5");
+//		b1.setStartLocation("Hyderabad");
+//		b1.setEndLocation("kanyakumari");
+//
+//		BusDetails b2=new BusDetails();
+//		b2.setTravels("Kaveri");
+//		b2.setServiceId(4567);
+//		b2.setRating("3.5");
+//		b2.setStartLocation("Banglore");
+//		b2.setEndLocation("Delhi");
+//
+//		busDetailsRepository.save(b1);
+//		busDetailsRepository.save(b2);
+//
+//	}
 }

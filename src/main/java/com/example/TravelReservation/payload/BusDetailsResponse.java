@@ -25,8 +25,8 @@ public class BusDetailsResponse {
     private String droppingLocation;
 
 
-    private LocalDate boardingDate;
-    private LocalDate droppingDate;
+    private String boardingDate;
+    private String droppingDate;
     private String boardingTime;
     private String droppingTime;
 
