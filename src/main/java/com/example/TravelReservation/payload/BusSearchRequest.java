@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @ToString
 public class BusSearchRequest {
-    @NotNull(message = "Boarding address should not be null")
+    @NotNull(message = "Boarding Location should not be null")
     private String boardingLocation;
-    @NotNull(message = "Destination should not be null")
-    private String destination;
+    @NotNull(message = "Dropping Location should not be null")
+    private String droppingLocation;
 }

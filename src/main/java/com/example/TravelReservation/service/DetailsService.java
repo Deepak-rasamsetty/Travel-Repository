@@ -33,21 +33,34 @@ public class DetailsService {
     public List<BusDetailsResponse> getAvailableBusses(BusSearchRequest request) {
         LOGGER.info("Entered getAvailableBusses, request - {}", request);
         List<Integer> availableBusList = routesRepository.
-                fetchAvailableBusesByLocation(request.getBoardingLocation(), request.getDestination());
-        LOGGER.info("Found routes for the given aLocation and zLocation- "+availableBusList);
+                fetchAvailableBusesByLocation(request.getBoardingLocation(), request.getDroppingLocation());
+        LOGGER.info("Found Buses for the given aLocation and zLocation- {}",availableBusList);
         List<BusDetails> busDetailsList = busDetailsRepository.findAllById(availableBusList);
+        LOGGER.info("Fetched busDetails for all available buses - {} ", busDetailsList);
         List<BusDetailsResponse> busDetailsResponseList = busDetailsList.stream()
                 .map((item)->{return modelMapper.map(item,BusDetailsResponse.class);}).collect(Collectors.toList());
+        updateTimeAndFareDetails(busDetailsResponseList, request);
+        LOGGER.info("Leaving getAvailableBusses, response - {}", Arrays.toString(busDetailsResponseList.toArray()) );
+        return busDetailsResponseList;
+    }
+
+    public void updateTimeAndFareDetails(List<BusDetailsResponse> busDetailsResponseList, BusSearchRequest request){
+        LOGGER.info("Entered function updateTimeAndFareDetails , busDetailsResponseList- {} ", busDetailsResponseList);
         for(BusDetailsResponse bus: busDetailsResponseList){
             RoutesPk aRouteId=new RoutesPk(bus.getServiceId(), request.getBoardingLocation());
             Optional<Routes> aRoute = routesRepository.findById(aRouteId);
-            RoutesPk zRouteId=new RoutesPk(bus.getServiceId(), request.getDestination());
+            RoutesPk zRouteId=new RoutesPk(bus.getServiceId(), request.getDroppingLocation());
             Optional<Routes> zRoute = routesRepository.findById(zRouteId);
-            bus.setBoardingTime(aRoute.get().getArraivalTime());
-            bus.setDroppingTime(zRoute.get().getArraivalTime());
-
+            LOGGER.info("Fetched Routes, aRoute - {}, zRoute - {}", aRoute, zRoute);
+            aRoute.ifPresent((route)->{ bus.setBoardingTime(route.getTime());});
+            aRoute.ifPresent((route)->{ bus.setBoardingDate(route.getDate());});
+            aRoute.ifPresent((route)->{ bus.setBoardingLocation(route.getRoutesPk().getLocation());});
+            zRoute.ifPresent((route)->{bus.setDroppingTime(route.getTime());});
+            zRoute.ifPresent((route)->{bus.setDroppingDate(route.getDate());});
+            zRoute.ifPresent((route)->{bus.setDroppingLocation(route.getRoutesPk().getLocation());});
+            Long fare = (zRoute.get().getDestinationSequenceId()- aRoute.get().getDestinationSequenceId()+1) *100L;
+            bus.setFare(fare);
         }
-        LOGGER.info("Leaving getAvailableBusses, response - {}", Arrays.toString(busDetailsResponseList.toArray()) );
-        return busDetailsResponseList;
+        LOGGER.info("Leaving function updateTimeAndFareDetails");
     }
 }

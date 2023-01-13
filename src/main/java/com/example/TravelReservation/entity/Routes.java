@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -20,6 +21,8 @@ public class Routes {
     RoutesPk routesPk;
     private Integer destinationSequenceId;
 
-    private LocalDateTime arraivalTime;
+    private LocalDate date;
+    private String time;
+
 
 }

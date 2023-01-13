@@ -12,7 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @SpringBootApplication
@@ -38,7 +40,8 @@ public class TravelReservationApplication {
 		rpk1.setLocation("Hyderabad");
 		r1.setRoutesPk(rpk1);
 		r1.setDestinationSequenceId(1);
-		r1.setArraivalTime(LocalDateTime.of(2022,2,1,11,0));
+		r1.setDate(LocalDate.of(2022,02,01));
+		r1.setTime("22:00");
 
 		Routes r2=new Routes();
 		RoutesPk rpk2=new RoutesPk();
@@ -46,7 +49,8 @@ public class TravelReservationApplication {
 		rpk2.setLocation("Banglore");
 		r2.setRoutesPk(rpk2);
 		r2.setDestinationSequenceId(2);
-		r2.setArraivalTime(LocalDateTime.of(2022,2,1,12,0));
+		r2.setDate(LocalDate.of(2022,02,01));
+		r2.setTime("23:00");
 
 		Routes r3=new Routes();
 		RoutesPk rpk3=new RoutesPk();
@@ -54,7 +58,8 @@ public class TravelReservationApplication {
 		rpk3.setLocation("Chennai");
 		r3.setRoutesPk(rpk3);
 		r3.setDestinationSequenceId(3);
-		r3.setArraivalTime(LocalDateTime.of(2022,2,1,13,0));
+		r3.setDate(LocalDate.of(2022,02,02));
+		r3.setTime("00:00");
 
 		Routes r4=new Routes();
 		RoutesPk rpk4=new RoutesPk();
@@ -62,8 +67,8 @@ public class TravelReservationApplication {
 		rpk4.setLocation("Kanyakumari");
 		r4.setRoutesPk(rpk4);
 		r4.setDestinationSequenceId(4);
-		r4.setArraivalTime(LocalDateTime.of(2022,2,1,14,0));
-
+		r4.setDate(LocalDate.of(2022,02,02));
+		r4.setTime("01:00");
 
 		Routes r5=new Routes();
 		RoutesPk rpk5=new RoutesPk();
@@ -71,7 +76,8 @@ public class TravelReservationApplication {
 		rpk5.setLocation("Banglore");
 		r5.setRoutesPk(rpk5);
 		r5.setDestinationSequenceId(1);
-		r5.setArraivalTime(LocalDateTime.of(2022,2,2,14,0));
+		r5.setDate(LocalDate.of(2022,02,02));
+		r5.setTime("03:00");
 
 		Routes r6=new Routes();
 		RoutesPk rpk6=new RoutesPk();
@@ -79,7 +85,8 @@ public class TravelReservationApplication {
 		rpk6.setLocation("Chennai");
 		r6.setRoutesPk(rpk6);
 		r6.setDestinationSequenceId(2);
-		r6.setArraivalTime(LocalDateTime.of(2022,2,2,15,0));
+		r6.setDate(LocalDate.of(2022,02,02));
+		r6.setTime("04:00");
 
 		Routes r7=new Routes();
 		RoutesPk rpk7=new RoutesPk();
@@ -87,7 +94,8 @@ public class TravelReservationApplication {
 		rpk7.setLocation("Kanyakumari");
 		r7.setRoutesPk(rpk7);
 		r7.setDestinationSequenceId(3);
-		r7.setArraivalTime(LocalDateTime.of(2022,2,2,16,0));
+		r7.setDate(LocalDate.of(2022,02,02));
+		r7.setTime("05:00");
 
 		Routes r8=new Routes();
 		RoutesPk rpk8=new RoutesPk();
@@ -95,8 +103,8 @@ public class TravelReservationApplication {
 		rpk8.setLocation("Delhi");
 		r8.setRoutesPk(rpk8);
 		r8.setDestinationSequenceId(4);
-		r8.setArraivalTime(LocalDateTime.of(2022,2,2,17,0));
-
+		r8.setDate(LocalDate.of(2022,02,02));
+		r8.setTime("06:00");
 
 		routesRepository.save(r1);
 		routesRepository.save(r2);

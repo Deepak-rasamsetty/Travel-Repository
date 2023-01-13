@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -15,13 +16,24 @@ import java.util.List;
 @ToString
 public class BusDetailsResponse {
     private Integer serviceId;
-    private String travels;
-    private String rating;
+
 
     private String StartLocation;
     private String endLocation;
-    private LocalDateTime boardingTime;
-    private LocalDateTime droppingTime;
+    private String boardingLocation;
+
+    private String droppingLocation;
+
+
+    private LocalDate boardingDate;
+    private LocalDate droppingDate;
+    private String boardingTime;
+    private String droppingTime;
+
+    private Long fare;
+
+    private String travels;
+    private String rating;
 
 
 
