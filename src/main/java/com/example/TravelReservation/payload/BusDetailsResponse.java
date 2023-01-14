@@ -9,11 +9,9 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class BusDetailsResponse {
     private Integer serviceId;
 

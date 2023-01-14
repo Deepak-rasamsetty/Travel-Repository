@@ -5,11 +5,9 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class BusSearchRequest {
     @NotNull(message = "Boarding Location should not be null")
     private String boardingLocation;

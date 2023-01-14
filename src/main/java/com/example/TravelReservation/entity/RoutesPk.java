@@ -6,11 +6,9 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RoutesPk implements Serializable {
     private Integer serviceId;
     private String location;

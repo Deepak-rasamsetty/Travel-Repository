@@ -6,11 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class BusDetails {
     @Id
     private Integer serviceId;

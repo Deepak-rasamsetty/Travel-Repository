@@ -21,7 +21,7 @@ public class DetailsController {
     private static Logger LOGGER = LogManager.getLogger(DetailsController.class);
     @Autowired
     DetailsService detailsService;
-   @PostMapping("/")
+   @PostMapping("/getAvaialableBuses")
     public List<BusDetailsResponse> getAvailableBuses(@Valid @RequestBody BusSearchRequest request){
        LOGGER.info("Entered getAvailableBuses, request - {}", request);
        List<BusDetailsResponse> resposneList= detailsService.getAvailableBusses(request);
@@ -29,7 +29,7 @@ public class DetailsController {
        return resposneList;
    }
 
-   @PostMapping("/add")
+   @PostMapping("/addNewService")
     public CustomResponse addNewService(@Valid @RequestBody CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException, LocationIsInvalidException {
        LOGGER.info("Entered addNewService, request - {}", request);
        CustomResponse response = detailsService.addNewService(request);
@@ -37,12 +37,6 @@ public class DetailsController {
        return response;
     }
 
-    @GetMapping("/{location}")
-    public List<String> getLocation(@PathVariable("location") String location){
-        LOGGER.info("Entered getLocation, location - {}", location);
-        List<String> response = detailsService.getLocation(location);
-        LOGGER.info("Leaving  addNewService, response - {}", response);
-        return response;
-    }
+
 
 }

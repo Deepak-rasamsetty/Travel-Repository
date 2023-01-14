@@ -19,6 +19,5 @@ public interface RoutesRepository extends JpaRepository<Routes, RoutesPk> {
     public List<Integer> fetchAvailableBusesByLocation(String aLocation, String zLocation);
 
 
-
-
+    List<Routes> findByRoutesPkServiceIdOrderBySequenceId(Integer serviceId);
 }

@@ -9,11 +9,9 @@ import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "routes")
 public class Routes {
 

@@ -4,11 +4,9 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RouteDetails {
 
     private Integer sequenceId;
