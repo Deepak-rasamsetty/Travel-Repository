@@ -1,9 +1,7 @@
 package com.example.TravelReservation.repository;
 
-import com.example.TravelReservation.entity.BusDetails;
 import com.example.TravelReservation.entity.Routes;
 import com.example.TravelReservation.entity.RoutesPk;
-import com.example.TravelReservation.payload.BusDetailsResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -3,12 +3,8 @@ package com.example.TravelReservation.service;
 import com.example.TravelReservation.exceptions.LocationIsInvalidException;
 import com.example.TravelReservation.exceptions.ServiceAlreadyPresentException;
 import com.example.TravelReservation.entity.BusDetails;
-import com.example.TravelReservation.entity.Routes;
-import com.example.TravelReservation.entity.RoutesPk;
 import com.example.TravelReservation.payload.*;
 import com.example.TravelReservation.repository.BusDetailsRepository;
-import com.example.TravelReservation.repository.LocationRepository;
-import com.example.TravelReservation.repository.RoutesRepository;
 import com.example.TravelReservation.utility.CustomUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,9 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Service
 public class DetailsService {
@@ -37,16 +32,40 @@ public class DetailsService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<BusDetailsResponse> getAvailableBusses(BusSearchRequest request) {
+    public BusSearchResponse getAvailableBusses(BusSearchRequest request) {
         LOGGER.info("Entered getAvailableBusses, request - {}", request);
         List<Integer> availableBusList = routesService.getAvailableBuses(request.getBoardingLocation(), request.getDroppingLocation());
         List<BusDetails> busDetailsList = busDetailsRepository.findAllById(availableBusList);
         LOGGER.info("Fetched busDetails for all available buses - {} ", busDetailsList);
-        List<BusDetailsResponse> busDetailsResponseList = busDetailsList.stream()
-                .map((item)->{return modelMapper.map(item,BusDetailsResponse.class);}).collect(Collectors.toList());
-        routesService.updateTimeAndFareDetails(busDetailsResponseList, request);
-        LOGGER.info("Leaving getAvailableBusses, response - {}", Arrays.toString(busDetailsResponseList.toArray()) );
-        return busDetailsResponseList;
+        BusSearchResponse busSearchResponse = new BusSearchResponse();
+        List<BusInfo> busInfoList = new ArrayList<>();
+        Consumer<BusDetails> addToBusInfoList =(busDetails)->{
+            BusInfo busInfo = getBusDetails(busDetails.getServiceId());
+            JourneyDetails journeyDetails = routesService.getJourneyDetails(busDetails.getServiceId(),
+                    request.getBoardingLocation(), request.getDroppingLocation());
+            busInfo.setJourneyDetails(journeyDetails);
+            busInfoList.add(busInfo);
+        };
+        busDetailsList.stream().forEach(addToBusInfoList);
+        busSearchResponse.setBoardingLocation(request.getBoardingLocation());
+        busSearchResponse.setDroppingLocation(request.getDroppingLocation());
+        busSearchResponse.setBusInfo(busInfoList);
+        LOGGER.info("Leaving getAvailableBusses, response - {}", busSearchResponse );
+        return busSearchResponse;
+    }
+
+    public BusInfo getBusDetails(Integer serviceId){
+        LOGGER.info("Entered getBusDetails, serviceId - {}", serviceId);
+        Optional<BusDetails> busDetails = busDetailsRepository.findById(serviceId);
+        LOGGER.info("Fetched busDetails for service Id - {}, Bus details - {} ", serviceId, busDetails);
+
+        if(busDetails.isEmpty()){
+             return null;
+        }
+        BusInfo busInfo = modelMapper.map(busDetails.get(),BusInfo.class);
+
+        LOGGER.info("Leaving getBusDetails, busInfo - {}", busInfo);
+        return busInfo;
     }
     @Transactional
     public CustomResponse addNewService(CreateNewBusServiceRequest request) throws ServiceAlreadyPresentException, LocationIsInvalidException {

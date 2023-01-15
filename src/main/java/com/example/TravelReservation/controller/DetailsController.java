@@ -2,7 +2,7 @@ package com.example.TravelReservation.controller;
 
 import com.example.TravelReservation.exceptions.LocationIsInvalidException;
 import com.example.TravelReservation.exceptions.ServiceAlreadyPresentException;
-import com.example.TravelReservation.payload.BusDetailsResponse;
+import com.example.TravelReservation.payload.BusSearchResponse;
 import com.example.TravelReservation.payload.BusSearchRequest;
 import com.example.TravelReservation.payload.CreateNewBusServiceRequest;
 import com.example.TravelReservation.payload.CustomResponse;
@@ -22,11 +22,11 @@ public class DetailsController {
     @Autowired
     DetailsService detailsService;
    @PostMapping("/getAvaialableBuses")
-    public List<BusDetailsResponse> getAvailableBuses(@Valid @RequestBody BusSearchRequest request){
+    public BusSearchResponse getAvailableBuses(@Valid @RequestBody BusSearchRequest request){
        LOGGER.info("Entered getAvailableBuses, request - {}", request);
-       List<BusDetailsResponse> resposneList= detailsService.getAvailableBusses(request);
-       LOGGER.info("Leaving getAvailableBuses, response - {}", resposneList);
-       return resposneList;
+       BusSearchResponse busSearchResponse= detailsService.getAvailableBusses(request);
+       LOGGER.info("Leaving getAvailableBuses, busSearchResponse - {}", busSearchResponse);
+       return busSearchResponse;
    }
 
    @PostMapping("/addNewService")
