@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Component
 public class CustomUtilities {
@@ -53,5 +55,16 @@ public class CustomUtilities {
         LOGGER.info("Leaving convertRouteEntityToRouteDetails, routeDetails - {}", routeDetails);
         return routeDetails;
 
+    }
+
+    public Boolean checkIfCommonElementsPresentBetweenLists(List<String> list1, List<String> list2){
+        LOGGER.info("Entered checkIfList2ElementAvailableInList1, list1 - {}, list2 - {}", list1, list2);
+        Predicate<String> isElementAVailableInList1 = (element)->{
+          return list1.contains(element);
+        };
+        Optional<String> commonElement = list2.stream().filter(isElementAVailableInList1).findAny();
+        Boolean result = commonElement.isPresent();
+        LOGGER.info("leaving  checkIfList2ElementAvailableInList1, result - {}", result);
+        return result;
     }
 }

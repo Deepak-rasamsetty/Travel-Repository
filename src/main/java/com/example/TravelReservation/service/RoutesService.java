@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class RoutesService {
         return response;
     }
 
+    @Transactional
     public void persistRoutesForNewService(CreateNewBusServiceRequest request){
         LOGGER.info("Entered addRoutes, request - {}", request);
         int sequenceId=1;

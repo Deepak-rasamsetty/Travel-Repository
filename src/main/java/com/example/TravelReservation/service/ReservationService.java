@@ -2,17 +2,22 @@ package com.example.TravelReservation.service;
 
 import com.example.TravelReservation.entity.ReservationDetails;
 import com.example.TravelReservation.entity.ReservationMap;
+import com.example.TravelReservation.entity.ReservationQueue;
 import com.example.TravelReservation.entity.TicketDetails;
+import com.example.TravelReservation.exceptions.TicketAlreadyReservedException;
 import com.example.TravelReservation.payload.*;
 import com.example.TravelReservation.repository.ReservationDetailsRepository;
 import com.example.TravelReservation.repository.ReservationMapRepository;
+import com.example.TravelReservation.repository.ReservationQueueRepository;
 import com.example.TravelReservation.repository.TicketDetailsRepository;
+import com.example.TravelReservation.utility.CustomUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,31 +41,48 @@ public class ReservationService {
     RoutesService routesService;
 
     @Autowired
+    CustomUtilities customUtilities;
+
+    @Autowired
+    ReservationQueueRepository reservationQueueRepository;
+
+    @Autowired
     ModelMapper modelMapper;
-    public Integer reserveTickets(ReserveTicketRequest request) {
+
+    @Transactional
+    public Integer reserveTickets(ReserveTicketRequest request) throws TicketAlreadyReservedException {
         LOGGER.info("Enetered reserveTickets, request - {}", request);
         try {
-            Thread.sleep(15000);
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if(checkIfRequestSeatsAreAlreadyReserved(request.getServiceId(), request.getSeatNumbers())){
+            throw new TicketAlreadyReservedException();
+        }
         ReservationDetails reservation = createReservation(request);
         Consumer<String> persistTicketsConsumer = (seatNo)->{
-            TicketDetails ticket = new TicketDetails();
-            ticket.setServiceId(request.getServiceId());
-            ticket.setSeatNumber(seatNo);
-            TicketDetails createdTicket = ticketDetailsRepository.save(ticket);
-
-            ReservationMap reservationMap = new ReservationMap();
-            reservationMap.setReservationId(reservation.getReservationId());
-            reservationMap.setTicketId(createdTicket.getTicketId());
-
-            reservationMapRepository.save(reservationMap);
+            createNewTicketAndAddToReservation(request.getServiceId(), reservation.getReservationId(), seatNo);
         };
         request.getSeatNumbers().stream().forEach(persistTicketsConsumer);
-
         LOGGER.info("Leaving reserveTickets, reservation - {}", reservation);
         return reservation.getReservationId();
+    }
+
+    public void createNewTicketAndAddToReservation(Integer serviceId,Integer reservationId, String seatNo){
+        LOGGER.info("Entered createNewTicketAndAddToReservation, serviceId - {},reservationId - {},seatNo - {} "
+                , serviceId, reservationId, seatNo);
+        TicketDetails ticket = new TicketDetails();
+        ticket.setServiceId(serviceId);
+        ticket.setSeatNumber(seatNo);
+        TicketDetails createdTicket = ticketDetailsRepository.save(ticket);
+
+        ReservationMap reservationMap = new ReservationMap();
+        reservationMap.setReservationId(reservationId);
+        reservationMap.setTicketId(createdTicket.getTicketId());
+        reservationMapRepository.save(reservationMap);
+        LOGGER.info("Leaving createNewTicketAndAddToReservation");
+
     }
 
     public List<String> getReservedSeats(Integer serviceId) {
@@ -107,4 +129,49 @@ public class ReservationService {
         return response;
     }
 
+    public Boolean checkIfRequestSeatsAreAlreadyReserved(Integer serviceId, List<String> requestedSeats){
+        LOGGER.info("Entered checkIfRequestSeatsAreAlreadyReserved, serviceId - {}, requestedSeats - {}"
+                , serviceId, requestedSeats);
+        List<String> reservedSeats = getReservedSeats(serviceId);
+        Boolean result = customUtilities.checkIfCommonElementsPresentBetweenLists(reservedSeats, requestedSeats);
+        LOGGER.info("Leaving checkIfRequestSeatsAreAlreadyReserved, result - {}"
+                , result);
+        return result;
+
+    }
+
+    @Transactional
+    public Integer addToReservationQueue() {
+        LOGGER.info("Entered addToReservationQueue");
+        ReservationQueue reservationRecord = new ReservationQueue();
+        reservationRecord.setStatus("IN-PROGRESS");
+        ReservationQueue createdReservationRecord = reservationQueueRepository.save(reservationRecord);
+        LOGGER.info("Leaving addToReservationQueue, reservationQueueId - {}"
+                , createdReservationRecord.getReservationQueueId());
+        return createdReservationRecord.getReservationQueueId();
+    }
+    @Transactional
+    public void reserveTicketAsync(ReserveTicketRequest request, Integer reservationQueueId){
+        LOGGER.info("Entered reserveTicketAsync, request - {}", request);
+        ReservationQueue reservationQueue = reservationQueueRepository.getReferenceById(reservationQueueId);
+        try {
+            Integer reservationId  = reserveTickets(request);
+            reservationQueue.setReservationId(reservationId);
+            reservationQueue.setStatus("COMPLETED");
+        } catch (TicketAlreadyReservedException e) {
+            LOGGER.info("Ticket is already reserved, updating the queue record to failure");
+            reservationQueue.setStatus("FAILED");
+        }
+        reservationQueueRepository.save(reservationQueue);
+        LOGGER.info("Leaving reserveTicketAsync");
+    }
+
+    public ReservationQueueResponse getReservationQueueStatus(Integer reservationQueueId) {
+        LOGGER.info("Entered getReservationQueueStatus, reservationQueueId - {}", reservationQueueId);
+        ReservationQueue reservationRecord = reservationQueueRepository.getReferenceById(reservationQueueId);
+        ReservationQueueResponse reservationQueueResponse = modelMapper.map(reservationRecord, ReservationQueueResponse.class);
+        LOGGER.info("Leaving getReservationQueueStatus, reservationQueueResponse - {}"
+                ,reservationQueueResponse);
+        return reservationQueueResponse;
+    }
 }
